@@ -1,0 +1,4 @@
+---
+img_channels: 4
+train_datatype: "Blobby"
+n_images: 8
