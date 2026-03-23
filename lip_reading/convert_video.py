@@ -5,7 +5,6 @@ import numpy as np
 import mediapipe as mp
 from tqdm import tqdm
 
-# Khởi tạo MediaPipe Face Mesh
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
     static_image_mode=False,
@@ -21,7 +20,6 @@ def get_mouth_roi(frame):
     if not results.multi_face_landmarks:
         return None
     
-    # Landmark indices cho vùng miệng (theo MediaPipe)
     mouth_landmarks = [
         61, 185, 40, 39, 37, 0, 267, 269, 270, 409,
         291, 375, 321, 405, 314, 17, 84, 181, 91, 146
@@ -46,7 +44,6 @@ def get_mouth_roi(frame):
     y1 = max(0, y1 - int(0.1 * height))
     y2 = min(h, y2 + int(0.1 * height))
     
-    # Đảm bảo kích thước gần vuông (96x96)
     width = x2 - x1
     height = y2 - y1
     if width > height:
@@ -68,10 +65,8 @@ def extract_opencv_with_landmark(filename):
         print(f"Error opening video file: {filename}")
         return None
     
-    # Get total frames for progress
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     
-    # Thử detect mặt trong 10 frame đầu
     roi = None
     for i in range(min(10, total_frames)):
         cap.set(cv2.CAP_PROP_POS_FRAMES, i)
@@ -88,7 +83,7 @@ def extract_opencv_with_landmark(filename):
         return None
     
     y1, y2, x1, x2 = roi
-    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Quay lại đầu video
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  
 
     frame_count = 0
     while cap.isOpened():
@@ -115,7 +110,6 @@ def extract_opencv_with_landmark(filename):
     return np.array(video)
 
 def main():
-    # Đường dẫn dữ liệu
     basedir = 'multi_speaker_data'
     basedir_to_save = 'processed_data'
     
@@ -150,7 +144,6 @@ def main():
             category = parts[-3]
             subset = parts[-2]
             video_name = parts[-1]
-            # Remove extension
             video_name = os.path.splitext(video_name)[0]
             
             path_to_save = os.path.join(basedir_to_save, category, subset, f"{video_name}.npz")
