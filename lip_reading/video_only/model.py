@@ -1,4 +1,3 @@
-# coding: utf-8
 import math
 import torch
 import torch.nn as nn
@@ -103,9 +102,9 @@ class GRU(nn.Module):
         h0 = Variable(torch.zeros(self.num_layers*2, x.size(0), self.hidden_size, device=x.device))
         out, _ = self.gru(x, h0)
         if self.every_frame:
-            out = self.fc(out)  # predictions based on every time step
+            out = self.fc(out)  
         else:
-            out = self.fc(out[:, -1, :])  # predictions based on last time-step
+            out = self.fc(out[:, -1, :])  
         return out
 
 
@@ -146,7 +145,6 @@ class Lipreading(nn.Module):
                 )
         # backend_gru
         self.gru = GRU(self.inputDim, self.hiddenDim, self.nLayers, self.nClasses, self.every_frame)
-        # initialize
         self._initialize_weights()
 
     def forward(self, x):
